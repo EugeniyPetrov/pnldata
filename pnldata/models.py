@@ -23,7 +23,7 @@ class Tag(models.Model):
     def __unicode__(self):
         return '%s' % (self.name)
 
-class ExpenseSet(models.Model):
+class Transaction(models.Model):
     date = models.DateField()
     description = models.CharField(max_length=255, blank=True)
     tag1 = models.ForeignKey(Tag, related_name='tags1', blank=True, null=True)
@@ -35,4 +35,4 @@ class Expense(models.Model):
     currency = models.ForeignKey(Currency)
     purse = models.ForeignKey(Purse)
     purse_amount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    expense_set = models.ForeignKey(ExpenseSet)
+    expense_set = models.ForeignKey(Transaction)
