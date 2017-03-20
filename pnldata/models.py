@@ -35,4 +35,4 @@ class Expense(models.Model):
     currency = models.ForeignKey(Currency)
     purse = models.ForeignKey(Purse)
     purse_amount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    expense_set = models.ForeignKey(Transaction)
+    transaction = models.ForeignKey(Transaction)
