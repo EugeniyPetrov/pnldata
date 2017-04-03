@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.db.models import Sum
 
 from .models import Currency
 from .models import Purse
@@ -35,8 +36,21 @@ class ExpenseAdmin(admin.ModelAdmin):
     def get_transaction_tag3(self, obj):
         return obj.transaction.tag3
 
+class PurseAdmin(admin.ModelAdmin):
+    list_display=('balance',)
+
+    def get_queryset(self, request):
+        qs = super(PurseAdmin, self).get_queryset(request)
+        return qs.annotate(balance=Sum('expense__purse_amount'))
+
+    def balance(self, obj):
+        return obj.balance
+
+    balance.admin_order_field = 'balance'
+
+
 admin.site.register(Currency)
-admin.site.register(Purse)
+admin.site.register(Purse, PurseAdmin)
 admin.site.register(Transaction, TransactionAdmin)
 admin.site.register(Expense, ExpenseAdmin)
 admin.site.register(Tag)
