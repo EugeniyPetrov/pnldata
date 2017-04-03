@@ -30,9 +30,15 @@ class Transaction(models.Model):
     tag2 = models.ForeignKey(Tag, related_name='tags2', blank=True, null=True)
     tag3 = models.ForeignKey(Tag, related_name='tags3', blank=True, null=True)
 
+    def __unicode__(self):
+        return '#%d %s (%s)' % (self.id, self.description, self.date,)
+
 class Expense(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     currency = models.ForeignKey(Currency)
     purse = models.ForeignKey(Purse)
     purse_amount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     transaction = models.ForeignKey(Transaction)
+
+    def __unicode__(self):
+        return '%.2f %s (%.2f %s)' % (self.amount, self.currency, self.purse_amount, self.purse.currency,)

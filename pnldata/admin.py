@@ -37,7 +37,7 @@ class ExpenseAdmin(admin.ModelAdmin):
         return obj.transaction.tag3
 
 class PurseAdmin(admin.ModelAdmin):
-    list_display=('balance',)
+    list_display=('__unicode__', 'balance',)
 
     def get_queryset(self, request):
         qs = super(PurseAdmin, self).get_queryset(request)
