@@ -41,4 +41,4 @@ class Expense(models.Model):
     transaction = models.ForeignKey(Transaction)
 
     def __unicode__(self):
-        return '%.2f %s (%.2f %s)' % (self.amount, self.currency, self.purse_amount, self.purse.currency,)
+        return '%.2f %s (%s %s)' % (self.amount, self.currency, self.purse_amount, self.purse.currency,)
