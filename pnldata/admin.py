@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.db.models import Sum
+import bulk_admin
 
 from .models import Currency
 from .models import Purse
@@ -11,11 +12,11 @@ class ExpenseInline(admin.StackedInline):
     model = Expense
     extra = 1
 
-class TransactionAdmin(admin.ModelAdmin):
+class TransactionAdmin(bulk_admin.BulkModelAdmin):
     inlines = [ExpenseInline]
     list_display=('date', 'description', 'tag1', 'tag2', 'tag3',)
 
-class ExpenseAdmin(admin.ModelAdmin):
+class ExpenseAdmin(bulk_admin.BulkModelAdmin):
     list_display=('get_transaction_id', 'get_transaction_date', 'amount', 'currency', 'purse', 'purse_amount', 'get_transaction_description', 'get_transaction_tag1', 'get_transaction_tag2', 'get_transaction_tag3',)
 
     def get_transaction_id(self, obj):
@@ -36,7 +37,7 @@ class ExpenseAdmin(admin.ModelAdmin):
     def get_transaction_tag3(self, obj):
         return obj.transaction.tag3
 
-class PurseAdmin(admin.ModelAdmin):
+class PurseAdmin(bulk_admin.BulkModelAdmin):
     list_display=('__unicode__', 'balance',)
 
     def get_queryset(self, request):
