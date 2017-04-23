@@ -18,6 +18,7 @@ class TransactionAdmin(bulk_admin.BulkModelAdmin):
 
 class ExpenseAdmin(bulk_admin.BulkModelAdmin):
     list_display=('get_transaction_id', 'get_transaction_date', 'amount', 'currency', 'purse', 'purse_amount', 'get_transaction_description', 'get_transaction_tag1', 'get_transaction_tag2', 'get_transaction_tag3',)
+    list_filter=('purse',)
 
     def get_transaction_id(self, obj):
         return obj.transaction.id
