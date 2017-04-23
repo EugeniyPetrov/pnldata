@@ -15,10 +15,12 @@ class ExpenseInline(admin.StackedInline):
 class TransactionAdmin(bulk_admin.BulkModelAdmin):
     inlines = [ExpenseInline]
     list_display=('date', 'description', 'tag1', 'tag2', 'tag3',)
+    ordering=('-date',)
 
 class ExpenseAdmin(bulk_admin.BulkModelAdmin):
     list_display=('get_transaction_id', 'get_transaction_date', 'amount', 'currency', 'purse', 'purse_amount', 'get_transaction_description', 'get_transaction_tag1', 'get_transaction_tag2', 'get_transaction_tag3',)
     list_filter=('purse',)
+    ordering=('-transaction__date',)
 
     def get_transaction_id(self, obj):
         return obj.transaction.id
