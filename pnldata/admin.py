@@ -10,6 +10,7 @@ from .models import Tag
 
 class ExpenseInline(admin.StackedInline):
     model = Expense
+    readonly_fields=('purse_amount_usd', 'purse_amount_eur',)
     extra = 1
 
 class TransactionAdmin(bulk_admin.BulkModelAdmin):
@@ -18,9 +19,10 @@ class TransactionAdmin(bulk_admin.BulkModelAdmin):
     ordering=('-date',)
 
 class ExpenseAdmin(bulk_admin.BulkModelAdmin):
-    list_display=('get_transaction_id', 'get_transaction_date', 'amount', 'currency', 'purse', 'purse_amount', 'get_transaction_description', 'get_transaction_tag1', 'get_transaction_tag2', 'get_transaction_tag3',)
+    list_display=('get_transaction_id', 'get_transaction_date', 'amount', 'currency', 'purse', 'purse_amount', 'purse_amount_usd', 'purse_amount_eur', 'get_transaction_description', 'get_transaction_tag1', 'get_transaction_tag2', 'get_transaction_tag3',)
     list_filter=('purse',)
     ordering=('-transaction__date',)
+    readonly_fields=('purse_amount_usd', 'purse_amount_eur',)
 
     def get_transaction_id(self, obj):
         return obj.transaction.id
@@ -41,14 +43,20 @@ class ExpenseAdmin(bulk_admin.BulkModelAdmin):
         return obj.transaction.tag3
 
 class PurseAdmin(bulk_admin.BulkModelAdmin):
-    list_display=('__unicode__', 'balance',)
+    list_display=('__unicode__', 'balance', 'balance_usd', 'balance_eur',)
 
     def get_queryset(self, request):
         qs = super(PurseAdmin, self).get_queryset(request)
-        return qs.annotate(balance=Sum('expense__purse_amount'))
+        return qs.annotate(balance=Sum('expense__purse_amount'), balance_usd=Sum('expense__purse_amount_usd'), balance_eur=Sum('expense__purse_amount_eur'))
 
     def balance(self, obj):
         return obj.balance
+
+    def balance_usd(self, obj):
+        return obj.balance_usd
+
+    def balance_eur(self, obj):
+        return obj.balance_eur
 
     balance.admin_order_field = 'balance'
 
