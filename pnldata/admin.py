@@ -43,20 +43,14 @@ class ExpenseAdmin(bulk_admin.BulkModelAdmin):
         return obj.transaction.tag3
 
 class PurseAdmin(bulk_admin.BulkModelAdmin):
-    list_display=('__unicode__', 'balance', 'balance_usd', 'balance_eur',)
+    list_display=('__unicode__', 'balance',)
 
     def get_queryset(self, request):
         qs = super(PurseAdmin, self).get_queryset(request)
-        return qs.annotate(balance=Sum('expense__purse_amount'), balance_usd=Sum('expense__purse_amount_usd'), balance_eur=Sum('expense__purse_amount_eur'))
+        return qs.annotate(balance=Sum('expense__purse_amount'),)
 
     def balance(self, obj):
         return obj.balance
-
-    def balance_usd(self, obj):
-        return obj.balance_usd
-
-    def balance_eur(self, obj):
-        return obj.balance_eur
 
     balance.admin_order_field = 'balance'
 
