@@ -54,7 +54,7 @@ class Expense(models.Model):
         for rate in ExchangeRate.objects.filter(date=self.transaction.date, currency=to_currency)[:1]:
             to_rate = rate
 
-        if not from_rate or not to_rate:
+        if not from_rate or not to_rate or not self.purse_amount:
             return None
         else:
             return self.purse_amount / from_rate.units_per_eur * to_rate.units_per_eur
