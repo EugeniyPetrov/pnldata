@@ -15,13 +15,13 @@ logger = logging.getLogger(__name__)
 class Command(BaseCommand):
     help = 'Grab currencies from xe.com'
 
-    def _grab_currencies(self, date):
+    def _grab_currencies(self, date, no_cache):
         url = "http://www.xe.com/currencytables/?%s" % (urlencode({
             "from": "EUR",
             "date": date.strftime("%Y-%m-%d"),
         }))
 
-        if date == datetime.date.today():
+        if date == datetime.date.today() or no_cache:
             logger.debug("Request %s" % url)
             page = requests.get(url)
         else:
@@ -52,6 +52,12 @@ class Command(BaseCommand):
             help='Update all expences',
         )
 
+        parser.add_argument(
+            '--no-cache',
+            action='store_true',
+            help='Don\'t user cache',
+        )
+
     def handle(self, *args, **options):
         if options["update_all"]:
             dates = Expense.objects.all().values_list('transaction__date', flat=True).distinct()
@@ -62,7 +68,7 @@ class Command(BaseCommand):
         eur = Currency.objects.get(iso_code="EUR")
 
         for date in dates:
-            grabbed_currencies = self._grab_currencies(date)
+            grabbed_currencies = self._grab_currencies(date, no_cache=options["no_cache"])
             currency_iso_codes = Expense.objects.filter(transaction__date=date).values_list('purse__currency__iso_code', flat=True).distinct()
             for iso_code in currency_iso_codes:
                 if iso_code in grabbed_currencies:
